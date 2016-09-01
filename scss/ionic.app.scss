@@ -21,3 +21,61 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+.form_group
+{
+  margin-bottom: 20px;
+}
+
+.placeholder-values
+{
+  color: $input-color-placeholder;
+  font-size: $font-size-base;
+  padding-right: 16px;
+}
+
+$error-color: rgba(red, .6);
+
+.has_error
+{
+  border-color: $error-color;
+}
+
+.help-block
+{
+  color: $error-color;
+}
+
+.used-checkbox
+{
+  border: none;
+
+  .used-checkbox-label
+  {
+    overflow: visible;
+    text-overflow: initial;
+    white-space: initial;
+    color: $input-color-placeholder;
+    font-size: $font-size-base;
+  }
+}
+
+// Make all inputs the same height
+// Shared size and type resets
+// $line-height-computed + $font-size-base are ionic variables
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"] {
+  height: $line-height-computed + $font-size-base + 2;
+}

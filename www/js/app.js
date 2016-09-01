@@ -3,9 +3,10 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+angular.module('starter', ['ionic','ngCordova','controllers','services'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform,$cordovaSQLite) {
+  var db = null;
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -20,5 +21,59 @@ angular.module('starter', ['ionic'])
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+    // db = $cordovaSQLite.openDB("my.db");
+    // db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    // // $cordovaSQLite.execute(db,'DROP TABLE IF EXISTS branch');
+    // $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS branch (name text, number integer, PRIMARY KEY (name, number))");
+
   });
 })
+
+.config(function($stateProvider, $urlRouterProvider) {
+  $stateProvider
+
+  .state('menu', {
+    url: '/menu',
+    templateUrl: "views/menu.html",
+    // controller: 'MenuCtrl',
+    resolve:{
+          creatDB: function(SQLiteService){
+            return SQLiteService.CreateDataBase();
+          }
+      }
+  })
+
+  .state('create',{
+    url: '/create',
+    templateUrl: "views/create.html",
+    controller: 'CreateCtrl'
+  })
+
+  .state('consult',{
+    url: '/consult',
+    templateUrl: "views/consult.html",
+    //controller: 'CreateCtrl'
+  })
+
+  .state('assign',{
+    url: '/assign',
+    templateUrl: "views/assign.html",
+    //controller: 'CreateCtrl'
+  })
+
+  .state('delete',{
+    url: '/delete',
+    templateUrl: "views/delete.html",
+    //controller: 'CreateCtrl'
+  })
+
+  .state('update',{
+    url: '/update',
+    templateUrl: "views/update.html",
+    //controller: 'CreateCtrl'
+  })
+
+  $urlRouterProvider.otherwise('/menu');
+})
+
+;
