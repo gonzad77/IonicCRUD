@@ -82,4 +82,42 @@ angular.module('services', [])
     return deferred.promise;
   }
 
+  this.getBrands = function(){
+    var deferred = $q.defer();
+    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var query = "SELECT brand FROM car GROUP BY brand";
+    $cordovaSQLite.execute(db,query)
+    .then(function(res){
+      deferred.resolve(res);
+    }, function(error){
+      deferred.reject(error);
+    });
+    return deferred.promise;
+  }
+
+  this.getCarModels = function(carBrand){
+    var deferred = $q.defer();
+    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var query = "SELECT model FROM car Where car.brand = ? GROUP BY model" ;
+    $cordovaSQLite.execute(db,query,[carBrand.brand])
+    .then(function(res){
+      deferred.resolve(res);
+    }, function(error){
+      deferred.reject(error);
+    });
+    return deferred.promise;
+  }
+
+  this.getCarColors = function(carBrand, carModel){
+    var deferred = $q.defer();
+    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var query = "SELECT color FROM car Where car.brand = ? AND car.model = ?" ;
+    $cordovaSQLite.execute(db,query,[carBrand.brand, carModel.model])
+    .then(function(res){
+      deferred.resolve(res);
+    }, function(error){
+      deferred.reject(error);
+    });
+    return deferred.promise;
+  }
 })

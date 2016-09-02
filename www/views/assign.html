@@ -9,7 +9,7 @@
         <div class="form_group">
           <label class="item item-select">
             <div class="input-label">
-              Branch name:
+              <spam class="placeholder-values">Branch name</spam>
             </div>
             <select ng-options="item as item.name for item in branchItems track by item.name" ng-model="assign.branchName" ng-change="reloadNumbers()" required></select>
           </label>
@@ -18,9 +18,36 @@
         <div class="form_group">
           <label class="item item-select">
             <div class="input-label">
-              Branch number:
+              <spam class="placeholder-values">Branch number</spam>
             </div>
-            <select ng-options="item as item.number for item in branchNumbers track by item.number" ng-model="assign.numbers" required></select>
+            <select ng-options="item as item.number for item in branchNumbers track by item.number" ng-model="assign.branchNumber" required></select>
+          </label>
+        </div>
+
+        <div class="form_group">
+          <label class="item item-select">
+            <div class="input-label">
+              <spam class="placeholder-values">Car brand</spam>
+            </div>
+            <select ng-options="item as item.brand for item in carBrands track by item.brand" ng-model="assign.carBrand" ng-change="reloadModels()" required></select>
+          </label>
+        </div>
+
+        <div class="form_group">
+          <label class="item item-select">
+            <div class="input-label">
+              <spam class="placeholder-values">Car model</spam>
+            </div>
+            <select ng-options="item as item.model for item in carModels track by item.model" ng-model="assign.carModel" ng-change="reloadColors()" required></select>
+          </label>
+        </div>
+
+        <div class="form_group">
+          <label class="item item-select">
+            <div class="input-label">
+              <spam class="placeholder-values">Car color</spam>
+            </div>
+            <select ng-options="item as item.color for item in carColors track by item.color" ng-model="assign.carColor" required></select>
           </label>
         </div>
 

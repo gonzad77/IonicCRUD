@@ -19,22 +19,46 @@ angular.module('controllers', [])
   }
 })
 
-.controller('AssignCtrl', function($scope, $state, branchs, SQLiteService){
+.controller('AssignCtrl', function($scope, $state, branchs, brands,SQLiteService){
     $scope.branchItems = branchs.rows;
+    $scope.carBrands = brands.rows;
     $scope.assign = {
       branchName: $scope.branchItems[0],
+      carBrand: $scope.carBrands[0],
     }
 
     $scope.reloadNumbers = function(){
       SQLiteService.getBranchNumber($scope.assign.branchName)
       .then(function(numbers){
         $scope.branchNumbers = numbers.rows;
-        $scope.assign.numbers = $scope.branchNumbers[0];
+        $scope.assign.branchNumber = $scope.branchNumbers[0];
+      }, function(error){
+        console.log(error);
+      })
+    }
+    $scope.reloadNumbers();
+
+    $scope.reloadModels = function(){
+      SQLiteService.getCarModels($scope.assign.carBrand)
+      .then(function(models){
+        $scope.carModels = models.rows;
+        $scope.assign.carModel = $scope.carModels[0];
+        $scope.reloadColors();
+      }, function(error){
+        console.log(error);
+      })
+    }
+    $scope.reloadModels();
+
+    $scope.reloadColors = function(){
+      SQLiteService.getCarColors($scope.assign.carBrand, $scope.assign.carModel)
+      .then(function(colors){
+        $scope.carColors = colors.rows;
+        $scope.assign.carColor = $scope.carColors[0];
       }, function(error){
         console.log(error);
       })
     }
 
-    $scope.reloadNumbers();
 
 })

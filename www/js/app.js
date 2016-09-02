@@ -62,7 +62,11 @@ angular.module('starter', ['ionic','ngCordova','controllers','services'])
     resolve:{
       branchs: function(SQLiteService){
         return SQLiteService.getBranchsName();
+      },
+      brands: function(SQLiteService){
+        return SQLiteService.getBrands();
       }
+
     }
   })
 
