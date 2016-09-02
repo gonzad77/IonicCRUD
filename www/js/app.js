@@ -58,7 +58,12 @@ angular.module('starter', ['ionic','ngCordova','controllers','services'])
   .state('assign',{
     url: '/assign',
     templateUrl: "views/assign.html",
-    //controller: 'CreateCtrl'
+    controller: 'AssignCtrl',
+    resolve:{
+      branchs: function(SQLiteService){
+        return SQLiteService.getBranchsName();
+      }
+    }
   })
 
   .state('delete',{

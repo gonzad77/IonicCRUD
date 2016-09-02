@@ -1,8 +1,30 @@
 <ion-view>
   <ion-header-bar class="bar-stable">
     <h1 class="title">Assign</h1>
+    <button class="button" ui-sref="menu">Back</button>
   </ion-header-bar>
   <ion-content>
+    <form name="assign_form" novalidate>
+      <div class="form-fields-outer list list-inset">
+        <div class="form_group">
+          <label class="item item-select">
+            <div class="input-label">
+              Branch name:
+            </div>
+            <select ng-options="item as item.name for item in branchItems track by item.name" ng-model="assign.branchName" ng-change="reloadNumbers()" required></select>
+          </label>
+        </div>
 
+        <div class="form_group">
+          <label class="item item-select">
+            <div class="input-label">
+              Branch number:
+            </div>
+            <select ng-options="item as item.number for item in branchNumbers track by item.number" ng-model="assign.numbers" required></select>
+          </label>
+        </div>
+
+      </div>
+    </form>
   </ion-content>
 </ion-view>

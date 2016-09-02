@@ -1,6 +1,7 @@
 <ion-view cache-view="false">
   <ion-header-bar class="bar-stable">
     <h1 class="title">Create a car</h1>
+    <button class="button" ui-sref="menu">Back</button>
   </ion-header-bar>
   <ion-content>
     <form name="create_form" novalidate>
@@ -24,7 +25,7 @@
 
         <div class="form_group">
           <label class="item item-input" ng-class="{ 'has_error' : create_form.model.$invalid && ! create_form.model.$pristine }">
-            <input type="text" placeholder="Model" name="model" ng-model="user.model" ng-minlength="2" ng-maxlength="30" ng-model-options="{ debounce: 500 }" required>
+            <input type="text" placeholder="Model" name="model" ng-model="car.model" ng-minlength="2" ng-maxlength="30" ng-model-options="{ debounce: 500 }" required>
           </label>
           <p ng-show="create_form.model.$invalid && !create_form.model.$pristine && !create_form.model.$error.minlength && !create_form.model.$error.maxlength" class="help-block">The model is required.</p>
           <p ng-show="create_form.model.$error.minlength" class="help-block">The model is too short.</p>
@@ -72,13 +73,12 @@
         </div>
 
         <div class="form_group">
-          <ion-checkbox ng-model="car.used" name="used" class="used-checkbox" required>
+          <ion-checkbox ng-model="car.used" name="used" class="used-checkbox">
             <span class="used-checkbox-label">Used?</span>
           </ion-checkbox>
-          <p ng-show="!create_form.used.$pristine && !car.used" class="help-block">Your must compleate the checkbox.</p>
         </div>
 
-        <button class="button button-full button-positive" ng-click="Create(car)" ng-disabled="create_form.$invalid || !car.used">
+        <button class="button button-full button-positive" ng-click="create(car)" ng-disabled="create_form.$invalid">
           Create car
         </button>
 
