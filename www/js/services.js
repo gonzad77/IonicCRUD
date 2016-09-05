@@ -120,4 +120,53 @@ angular.module('services', [])
     });
     return deferred.promise;
   }
+
+  this.assign = function(cars){
+    var deferred = $q.defer(),
+    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000),
+    createQuery = "CREATE TABLE IF NOT EXISTS assign (brandId integer, branch text, branchNumber integer, quantity integer,PRIMARY KEY(brandId, branch, branchNumber), FOREIGN KEY (branch,branchNumber) REFERENCES branch(name,number))"
+    //$cordovaSQLite.execute(db,'DROP TABLE IF EXISTS assign');
+    $cordovaSQLite.execute(db, createQuery);
+    var selectQuery = "SELECT rowid FROM car WHERE car.brand = ? AND car.model = ? AND car.color = ?";
+    $cordovaSQLite.execute(db,selectQuery,[cars.carBrand.brand, cars.carModel.model, cars.carColor.color])
+    .then(function(res){
+      db.transaction(function(tx) {
+        var insertQuery = "INSERT INTO assign VALUES (?,?,?,?)";
+        tx.executeSql(insertQuery,[res.rows[0].rowid, cars.branchName.name, cars.branchNumber.number, cars.quantity]);
+      }, function(error) {
+        console.log('Transaction ERROR: ' + error.message);
+        deferred.resolve(error.message);
+      }, function() {
+        console.log('Populated database OK');
+        deferred.resolve("OK");
+      });
+    }, function(error){
+      deferred.reject(error);
+    })
+    return deferred.promise;
+  }
+
+  this.getCars = function(){
+    var deferred = $q.defer(),
+    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    $cordovaSQLite.execute(db,'Select car.brand, car.model, car.color, car.rowid FROM car')
+    .then(function(res){
+      deferred.resolve(res);
+    },function(error){
+      deferred.reject(error);
+    })
+    return deferred.promise;
+  }
+
+  this.getCar = function(rowId){
+    var deferred = $q.defer(),
+    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    $cordovaSQLite.execute(db,'Select * FROM car WHERE car.rowid = ?',[rowId])
+    .then(function(res){
+      deferred.resolve(res.rows);
+    }, function(error){
+      deferred.reject(error);
+    })
+    return deferred.promise;
+  }
 })

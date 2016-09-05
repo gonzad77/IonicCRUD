@@ -79,7 +79,23 @@ angular.module('starter', ['ionic','ngCordova','controllers','services'])
   .state('update',{
     url: '/update',
     templateUrl: "views/update.html",
-    //controller: 'CreateCtrl'
+    controller: 'UpdateCtrl',
+    resolve:{
+      cars: function(SQLiteService){
+        return SQLiteService.getCars();
+      }
+    }
+  })
+
+  .state('edit',{
+    url:'/edit/:rowId',
+    templateUrl: "views/edit.html",
+    controller: 'EditCtrl',
+    resolve:{
+      car: function(SQLiteService, $stateParams){
+        return SQLiteService.getCar($stateParams.rowId);
+      }
+    }
   })
 
   $urlRouterProvider.otherwise('/menu');

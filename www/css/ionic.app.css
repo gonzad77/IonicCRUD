@@ -9815,6 +9815,20 @@ a.button {
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
 
+.header .col {
+  background-color: lightgrey; }
+
+.col {
+  border: solid 1px grey;
+  border-bottom-style: none;
+  border-right-style: none; }
+
+.col:last-child {
+  border-right: solid 1px grey; }
+
+.row:last-child .col {
+  border-bottom: solid 1px grey; }
+
 .form_group {
   margin-bottom: 20px; }
 

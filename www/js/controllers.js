@@ -22,16 +22,17 @@ angular.module('controllers', [])
 .controller('AssignCtrl', function($scope, $state, branchs, brands,SQLiteService){
     $scope.branchItems = branchs.rows;
     $scope.carBrands = brands.rows;
-    $scope.assign = {
+    $scope.cars = {
       branchName: $scope.branchItems[0],
       carBrand: $scope.carBrands[0],
+      quantity: ""
     }
 
     $scope.reloadNumbers = function(){
-      SQLiteService.getBranchNumber($scope.assign.branchName)
+      SQLiteService.getBranchNumber($scope.cars.branchName)
       .then(function(numbers){
         $scope.branchNumbers = numbers.rows;
-        $scope.assign.branchNumber = $scope.branchNumbers[0];
+        $scope.cars.branchNumber = $scope.branchNumbers[0];
       }, function(error){
         console.log(error);
       })
@@ -39,10 +40,10 @@ angular.module('controllers', [])
     $scope.reloadNumbers();
 
     $scope.reloadModels = function(){
-      SQLiteService.getCarModels($scope.assign.carBrand)
+      SQLiteService.getCarModels($scope.cars.carBrand)
       .then(function(models){
         $scope.carModels = models.rows;
-        $scope.assign.carModel = $scope.carModels[0];
+        $scope.cars.carModel = $scope.carModels[0];
         $scope.reloadColors();
       }, function(error){
         console.log(error);
@@ -51,14 +52,33 @@ angular.module('controllers', [])
     $scope.reloadModels();
 
     $scope.reloadColors = function(){
-      SQLiteService.getCarColors($scope.assign.carBrand, $scope.assign.carModel)
+      SQLiteService.getCarColors($scope.cars.carBrand, $scope.cars.carModel)
       .then(function(colors){
         $scope.carColors = colors.rows;
-        $scope.assign.carColor = $scope.carColors[0];
+        $scope.cars.carColor = $scope.carColors[0];
       }, function(error){
         console.log(error);
       })
     }
 
+    $scope.doAssign = function(cars){
+      SQLiteService.assign(cars)
+      .then(function(res){
+        console.log(res);
+      },function(error){
+        console.log(error);
+      })
+    }
+})
+
+.controller('UpdateCtrl', function($scope, $state, cars, SQLiteService){
+  $scope.carRows = cars.rows;
+
+  $scope.edit = function(rowid){
+    $state.go('edit', {rowId: rowid});
+  }
+})
+
+.controller('EditCtrl', function($scope, $state, car, SQLiteService){
 
 })

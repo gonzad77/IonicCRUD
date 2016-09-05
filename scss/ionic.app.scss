@@ -21,6 +21,24 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+.header .col {
+    background-color:lightgrey;
+}
+
+.col {
+    border: solid 1px grey;
+    border-bottom-style: none;
+    border-right-style: none;
+}
+
+.col:last-child {
+    border-right: solid 1px grey;
+}
+
+.row:last-child .col {
+    border-bottom: solid 1px grey;
+}
+
 .form_group
 {
   margin-bottom: 20px;
