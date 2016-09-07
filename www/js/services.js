@@ -135,7 +135,7 @@ angular.module('services', [])
         tx.executeSql(insertQuery,[res.rows[0].rowid, cars.branchName.name, cars.branchNumber.number, cars.quantity]);
       }, function(error) {
         console.log('Transaction ERROR: ' + error.message);
-        deferred.resolve(error.message);
+        deferred.reject(error.message);
       }, function() {
         console.log('Populated database OK');
         deferred.resolve("OK");
@@ -163,9 +163,43 @@ angular.module('services', [])
     db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
     $cordovaSQLite.execute(db,'Select * FROM car WHERE car.rowid = ?',[rowId])
     .then(function(res){
-      deferred.resolve(res.rows);
+      deferred.resolve(res.rows[0]);
     }, function(error){
       deferred.reject(error);
+    })
+    return deferred.promise;
+  }
+
+  this.updateCar = function(rowId, newCar) {
+    var deferred = $q.defer(),
+    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    db.transaction(function(tx){
+      var query = 'UPDATE car SET brand = ?, model = ?, doors = ?, color = ?, price = ? WHERE car.rowid = ?';
+      tx.executeSql(query,[newCar.brand.brand, newCar.model, newCar.doors, newCar.color, newCar.price, rowId]);
+    }, function(error){
+      deferred.reject(error);
+    },function(){
+      deferred.resolve('OK');
+    })
+    return deferred.promise;
+  }
+
+  this.deleteCar = function(rowId){
+    var service = this;
+    var deferred = $q.defer(),
+    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    db.transaction(function(tx){
+      var query = 'Delete FROM car WHERE car.rowid = ?';
+      tx.executeSql(query,[rowId]);
+    }, function(error){
+      deferred.reject(error);
+    },function(){
+      service.getCars()
+      .then(function(res){
+        deferred.resolve(res)
+      },function(error){
+        deferred.reject(error);
+      })
     })
     return deferred.promise;
   }

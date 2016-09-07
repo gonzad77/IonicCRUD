@@ -73,7 +73,12 @@ angular.module('starter', ['ionic','ngCordova','controllers','services'])
   .state('delete',{
     url: '/delete',
     templateUrl: "views/delete.html",
-    //controller: 'CreateCtrl'
+    controller: 'DeleteCtrl',
+    resolve:{
+      cars: function(SQLiteService){
+        return SQLiteService.getCars();
+      }
+    }
   })
 
   .state('update',{
@@ -94,6 +99,9 @@ angular.module('starter', ['ionic','ngCordova','controllers','services'])
     resolve:{
       car: function(SQLiteService, $stateParams){
         return SQLiteService.getCar($stateParams.rowId);
+      },
+      brands: function(SQLiteService){
+        return SQLiteService.getBrands();
       }
     }
   })

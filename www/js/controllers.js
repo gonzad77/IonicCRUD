@@ -40,7 +40,7 @@ angular.module('controllers', [])
     $scope.reloadNumbers();
 
     $scope.reloadModels = function(){
-      SQLiteService.getCarModels($scope.cars.carBrand)
+      SQLiteService.getCarModels($scope.cars.carBrand.brand)
       .then(function(models){
         $scope.carModels = models.rows;
         $scope.cars.carModel = $scope.carModels[0];
@@ -52,7 +52,7 @@ angular.module('controllers', [])
     $scope.reloadModels();
 
     $scope.reloadColors = function(){
-      SQLiteService.getCarColors($scope.cars.carBrand, $scope.cars.carModel)
+      SQLiteService.getCarColors($scope.cars.carBrand.brand, $scope.cars.carModel.model)
       .then(function(colors){
         $scope.carColors = colors.rows;
         $scope.cars.carColor = $scope.carColors[0];
@@ -79,6 +79,42 @@ angular.module('controllers', [])
   }
 })
 
-.controller('EditCtrl', function($scope, $state, car, SQLiteService){
+.controller('EditCtrl', function($scope, $state, $stateParams, car, brands,SQLiteService){
+  $scope.carBrands = brands.rows;
 
+  var actualBrand = {
+    brand: car.brand
+  };
+
+  $scope.newCar = {
+    brand: actualBrand,
+    doors: ""+car.doors+"",
+    price: car.price,
+    model: car.model,
+    color:car.color
+  }
+
+  $scope.update = function(newCar){
+    SQLiteService.updateCar($stateParams.rowId, newCar)
+    .then(function(res){
+      console.log(res);
+      $scope.error = false;
+    },function(error){
+      console.log(error);
+      $scope.error = true;
+    })
+  }
+})
+
+.controller('DeleteCtrl', function($scope, $state, cars, SQLiteService){
+  $scope.carRows = cars.rows;
+
+  $scope.delete = function(rowid){
+    SQLiteService.deleteCar(rowid)
+    .then(function(res){
+      $scope.carRows = res.rows;
+    },function(error){
+      console.log(error);
+    })
+  }
 })
