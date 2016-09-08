@@ -40,7 +40,7 @@ angular.module('controllers', [])
     $scope.reloadNumbers();
 
     $scope.reloadModels = function(){
-      SQLiteService.getCarModels($scope.cars.carBrand.brand)
+      SQLiteService.getCarModels($scope.cars.carBrand)
       .then(function(models){
         $scope.carModels = models.rows;
         $scope.cars.carModel = $scope.carModels[0];
@@ -52,7 +52,7 @@ angular.module('controllers', [])
     $scope.reloadModels();
 
     $scope.reloadColors = function(){
-      SQLiteService.getCarColors($scope.cars.carBrand.brand, $scope.cars.carModel.model)
+      SQLiteService.getCarColors($scope.cars.carBrand, $scope.cars.carModel)
       .then(function(colors){
         $scope.carColors = colors.rows;
         $scope.cars.carColor = $scope.carColors[0];
@@ -114,6 +114,71 @@ angular.module('controllers', [])
     .then(function(res){
       $scope.carRows = res.rows;
     },function(error){
+      console.log(error);
+    })
+  }
+})
+
+.controller('ConsultCtrl', function($scope, $state, brands, SQLiteService){
+  var allBrands = [];
+  var allModels = [];
+  $scope.car = {
+    carBrand: "",
+    carModel: "",
+    color: "all"
+  }
+  for (var i=0 ; i < brands.rows.length ; i++){
+    allBrands.push(brands.rows[i]);
+  }
+  allBrands.unshift({
+    brand: "All Brands"
+  })
+  $scope.carBrands = allBrands;
+  $scope.car.carBrand = allBrands[0];
+
+  $scope.reloadModels = function(){
+    allModels = [];
+    if($scope.car.carBrand.brand === "All Brands"){
+      SQLiteService.getAllModels()
+      .then(function(models){
+        for (var i=0 ; i < models.rows.length ; i++){
+          allModels.push(models.rows[i]);
+        }
+        allModels.unshift({
+          model: "All Models"
+        })
+        $scope.carModels = allModels;
+        $scope.car.carModel = allModels[0];
+      })
+    }
+    else{
+      SQLiteService.getCarModels($scope.car.carBrand)
+      .then(function(models){
+        for (var i=0 ; i < models.rows.length ; i++){
+          allModels.push(models.rows[i]);
+        }
+        allModels.unshift({
+          model: "All Models"
+        })
+        $scope.carModels = allModels;
+        $scope.car.carModel = $scope.carModels[0];
+      }, function(error){
+        console.log(error);
+      })
+    }
+  }
+  $scope.reloadModels();
+
+  $scope.consult = function(car){
+    SQLiteService.consult(car)
+    .then(function(res){
+      $scope.branches = res.rows;
+      $scope.error = false;
+      $scope.showTable = true;
+      console.log(res);
+    }, function(error){
+      $scope.error = true;
+      $scope.showTable = false;
       console.log(error);
     })
   }

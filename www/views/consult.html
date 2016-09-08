@@ -1,8 +1,63 @@
 <ion-view>
   <ion-header-bar class="bar-stable">
     <h1 class="title">Consult</h1>
+    <button class="button" ui-sref="menu">Back</button>
   </ion-header-bar>
   <ion-content>
+      <div class="form-fields-outer list list-inset">
 
+        <div class="form_group">
+          <label class="item item-select">
+            <div class="input-label">
+              <spam class="placeholder-values">Car brand</spam>
+            </div>
+            <select ng-options="item as item.brand for item in carBrands track by item.brand" ng-model="car.carBrand" ng-change="reloadModels()" required></select>
+          </label>
+        </div>
+
+        <div class="form_group">
+          <label class="item item-select">
+            <div class="input-label">
+              <spam class="placeholder-values">Car model</spam>
+            </div>
+            <select ng-options="item as item.model for item in carModels track by item.model" ng-model="car.carModel" ng-change="reloadColors()" required></select>
+          </label>
+        </div>
+
+        <div class="form_group">
+          <label class="item item-select">
+            <div class="input-label">
+              <spam class="placeholder-values">Colors</spam>
+            </div>
+            <select ng-model="car.color" required>
+              <option value="all">All Colors</option>
+              <option value="Black">Black</option>
+              <option value="Blue">Blue</option>
+              <option value="Green">Green</option>
+              <option value="Grey">Grey</option>
+              <option value="Red" >Red</option>
+              <option value="White">White</option>
+              <option value="Yellow">Yellow</option>
+            </select>
+          </label>
+        </div>
+
+        <button class="button button-full button-positive" ng-click="consult(car)">
+          Consult
+        </button>
+        <p ng-show="error" class="help-block">Error</p>
+
+        <div class="row header form_group" ng-show="showTable">
+              <div class="col col-33">branch</div>
+              <div class="col col-33">branch number</div>
+              <div class="col col-33">quantity</div>
+            </div>
+            <div class="row" ng-repeat="b in branches">
+              <div class="col col-33">{{b.branch}}</div>
+              <div class="col col-33">{{b.branchNumber}}</div>
+              <div class="col col-33">{{b.quantity}}</div>
+            </div>
+
+      </div>
   </ion-content>
 </ion-view>

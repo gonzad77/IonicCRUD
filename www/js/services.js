@@ -108,6 +108,19 @@ angular.module('services', [])
     return deferred.promise;
   }
 
+  this.getAllModels = function(){
+    var deferred = $q.defer();
+    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var query = "SELECT model FROM car GROUP BY model" ;
+    $cordovaSQLite.execute(db,query)
+    .then(function(res){
+      deferred.resolve(res);
+    }, function(error){
+      deferred.reject(error);
+    });
+    return deferred.promise;
+  }
+
   this.getCarColors = function(carBrand, carModel){
     var deferred = $q.defer();
     var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
@@ -200,6 +213,28 @@ angular.module('services', [])
       },function(error){
         deferred.reject(error);
       })
+    })
+    return deferred.promise;
+  }
+
+  this.consult = function(car){
+    var deferred = $q.defer(),
+    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    $cordovaSQLite.execute(db,'Select car.rowid FROM car WHERE car.brand = ? AND car.model = ? AND car.color = ?', [car.carBrand.brand, car.carModel.model, car.color])
+    .then(function(res){
+      if(res.rows.length > 0){
+        $cordovaSQLite.execute(db,'Select assign.branch, assign.branchNumber, assign.quantity FROM assign WHERE assign.brandId = ?' , [res.rows[0].rowid])
+        .then(function(branches){
+          deferred.resolve(branches);
+        }, function(error){
+          deferred.reject(error);
+        })
+      }
+      else{
+        deferred.reject("error")
+      }
+    },function(error){
+      deferred.reject(error);
     })
     return deferred.promise;
   }

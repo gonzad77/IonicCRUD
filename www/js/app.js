@@ -52,7 +52,12 @@ angular.module('starter', ['ionic','ngCordova','controllers','services'])
   .state('consult',{
     url: '/consult',
     templateUrl: "views/consult.html",
-    //controller: 'CreateCtrl'
+    controller: 'ConsultCtrl',
+    resolve:{
+      brands: function(SQLiteService){
+        return SQLiteService.getBrands();
+      }
+    }
   })
 
   .state('assign',{
