@@ -20,8 +20,8 @@ angular.module('controllers', [])
 })
 
 .controller('AssignCtrl', function($scope, $state, branchs, brands,SQLiteService){
-    $scope.branchItems = branchs.rows;
-    $scope.carBrands = brands.rows;
+    $scope.branchItems = branchs;
+    $scope.carBrands = brands;
     $scope.cars = {
       branchName: $scope.branchItems[0],
       carBrand: $scope.carBrands[0],
@@ -127,8 +127,8 @@ angular.module('controllers', [])
     carModel: "",
     color: "all"
   }
-  for (var i=0 ; i < brands.rows.length ; i++){
-    allBrands.push(brands.rows[i]);
+  for (var i=0 ; i < brands.length ; i++){
+    allBrands.push(brands[i]);
   }
   allBrands.unshift({
     brand: "All Brands"

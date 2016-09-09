@@ -57,15 +57,29 @@ angular.module('services', [])
   }
 
   this.getBranchsName = function(){
-    var deferred = $q.defer();
-    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
-    var query = "SELECT name FROM branch GROUP BY name";
-    $cordovaSQLite.execute(db,query)
-    .then(function(res){
-      deferred.resolve(res);
-    }, function(error){
-      deferred.reject(error);
-    });
+    var deferred = $q.defer(),
+    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000),
+    query = "SELECT name FROM branch GROUP BY name",
+    names = [];
+    db.transaction(function (tx) {
+       tx.executeSql(query, [], function (tx, resultSet) {
+           for(var x = 0; x < resultSet.rows.length; x++) {
+               names.push({
+                 name: resultSet.rows.item(x).name,
+               });
+           }
+       },
+       function (tx, error) {
+           console.log('SELECT error: ' + error.message);
+           deferred.reject(error.message);
+       });
+   }, function (error) {
+       console.log('transaction error: ' + error.message);
+       deferred.reject(error.message);
+   }, function () {
+       console.log('transaction ok');
+       deferred.resolve(names);
+   });
     return deferred.promise;
   }
 
@@ -83,15 +97,29 @@ angular.module('services', [])
   }
 
   this.getBrands = function(){
-    var deferred = $q.defer();
-    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
-    var query = "SELECT brand FROM car GROUP BY brand";
-    $cordovaSQLite.execute(db,query)
-    .then(function(res){
-      deferred.resolve(res);
-    }, function(error){
-      deferred.reject(error);
-    });
+    var deferred = $q.defer(),
+    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000),
+    query = "SELECT brand FROM car GROUP BY brand",
+    brands = [];
+    db.transaction(function (tx) {
+       tx.executeSql(query, [], function (tx, resultSet) {
+           for(var x = 0; x < resultSet.rows.length; x++) {
+               brands.push({
+                 brand: resultSet.rows.item(x).brand,
+               });
+           }
+       },
+       function (tx, error) {
+           console.log('SELECT error: ' + error.message);
+           deferred.reject(error.message);
+       });
+   }, function (error) {
+       console.log('transaction error: ' + error.message);
+       deferred.reject(error.message);
+   }, function () {
+       console.log('transaction ok');
+       deferred.resolve(brands);
+   });
     return deferred.promise;
   }
 
