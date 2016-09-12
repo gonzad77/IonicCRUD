@@ -9,9 +9,17 @@
         <div class="form_group">
           <label class="item item-select">
             <div class="input-label">
-              <spam class="placeholder-values">Car brand</spam>
+              <spam class="placeholder-values">Brand</spam>
             </div>
-            <select ng-options="item as item.brand for item in carBrands track by item.brand" ng-model="newCar.brand" required></select>
+            <select ng-model="newCar.brand" required>
+              <option value="BMW">BMW</option>
+              <option value="Mercedes-Benz">Mercedes-Benz</option>
+              <option value="Chevrolet">Chevrolet</option>
+              <option value="Ford">Ford</option>
+              <option value="VolksWagen">VolksWagen</option>
+              <option value="Toyota">Toyota</option>
+              <option value="Nissan">Nissan</option>
+            </select>
           </label>
         </div>
 

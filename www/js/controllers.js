@@ -80,18 +80,18 @@ angular.module('controllers', [])
 })
 
 .controller('EditCtrl', function($scope, $state, $stateParams, car, brands,SQLiteService){
-  $scope.carBrands = brands.rows;
+  $scope.carBrands = brands;
 
   var actualBrand = {
     brand: car.brand
   };
 
   $scope.newCar = {
-    brand: actualBrand,
+    brand: car.brand,
     doors: ""+car.doors+"",
     price: car.price,
     model: car.model,
-    color:car.color
+    color: car.color
   }
 
   $scope.update = function(newCar){

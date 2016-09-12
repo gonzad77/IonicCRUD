@@ -216,7 +216,7 @@ angular.module('services', [])
     db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
     db.transaction(function(tx){
       var query = 'UPDATE car SET brand = ?, model = ?, doors = ?, color = ?, price = ? WHERE car.rowid = ?';
-      tx.executeSql(query,[newCar.brand.brand, newCar.model, newCar.doors, newCar.color, newCar.price, rowId]);
+      tx.executeSql(query,[newCar.brand, newCar.model, newCar.doors, newCar.color, newCar.price, rowId]);
     }, function(error){
       deferred.reject(error);
     },function(){
