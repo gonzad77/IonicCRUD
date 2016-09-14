@@ -2,39 +2,39 @@ angular.module('services', [])
 
 .service('SQLiteService', function($cordovaSQLite, $q){
 
-  this.CreateDataBase = function(){
-    var deferred = $q.defer();
-    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
-    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS branch (name text, number integer, PRIMARY KEY (name, number))");
-    db.transaction(function(tx) {
-      var query = "INSERT INTO branch VALUES (?,?)";
-      tx.executeSql(query, ['AutoCar', 1]);
-      tx.executeSql(query, ['AutoCar', 2]);
-      tx.executeSql(query, ['AutoCar', 3]);
-      tx.executeSql(query, ['SuperCars', 1]);
-      tx.executeSql(query, ['SuperCars', 2]);
-      tx.executeSql(query, ['SuperCars', 3]);
-      tx.executeSql(query, ['SuperCars', 4]);
-      tx.executeSql(query, ['Soled', 1]);
-      tx.executeSql(query, ['Soled', 2]);
-      tx.executeSql(query, ['YouCar', 1]);
-      tx.executeSql(query, ['YouCar', 2]);
-      tx.executeSql(query, ['YouCar', 3]);
-      tx.executeSql(query, ['Movility', 1]);
-      tx.executeSql(query, ['Movility', 2]);
-    }, function(error) {
-        console.log('Transaction ERROR: ' + error.message);
-        deferred.resolve(error.message);
-    }, function() {
-        console.log('Populated database OK');
-        deferred.resolve("OK");
-    });
-    return deferred.promise;
-  }
+  // this.CreateDataBase = function(){
+  //   var deferred = $q.defer();
+  //   var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+  //   $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS branch (name text, number integer, PRIMARY KEY (name, number))");
+  //   db.transaction(function(tx) {
+  //     var query = "INSERT INTO branch VALUES (?,?)";
+  //     tx.executeSql(query, ['AutoCar', 1]);
+  //     tx.executeSql(query, ['AutoCar', 2]);
+  //     tx.executeSql(query, ['AutoCar', 3]);
+  //     tx.executeSql(query, ['SuperCars', 1]);
+  //     tx.executeSql(query, ['SuperCars', 2]);
+  //     tx.executeSql(query, ['SuperCars', 3]);
+  //     tx.executeSql(query, ['SuperCars', 4]);
+  //     tx.executeSql(query, ['Soled', 1]);
+  //     tx.executeSql(query, ['Soled', 2]);
+  //     tx.executeSql(query, ['YouCar', 1]);
+  //     tx.executeSql(query, ['YouCar', 2]);
+  //     tx.executeSql(query, ['YouCar', 3]);
+  //     tx.executeSql(query, ['Movility', 1]);
+  //     tx.executeSql(query, ['Movility', 2]);
+  //   }, function(error) {
+  //       console.log('Transaction ERROR: ' + error.message);
+  //       deferred.resolve(error.message);
+  //   }, function() {
+  //       console.log('Populated database OK');
+  //       deferred.resolve("OK");
+  //   });
+  //   return deferred.promise;
+  // }
 
   this.addCar = function(car){
     var deferred = $q.defer();
-    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS car (brand text, model text, doors integer, color text, price integer, used integer, PRIMARY KEY (brand, model, color))");
     db.transaction(function(tx) {
       var query = "INSERT INTO car VALUES (?,?,?,?,?,?)";
@@ -58,7 +58,7 @@ angular.module('services', [])
 
   this.getBranchsName = function(){
     var deferred = $q.defer(),
-    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000),
+    db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'}),
     query = "SELECT name FROM branch GROUP BY name",
     names = [];
     db.transaction(function (tx) {
@@ -85,11 +85,17 @@ angular.module('services', [])
 
   this.getBranchNumber = function(branchName){
     var deferred = $q.defer();
-    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     var query = "SELECT number FROM branch Where branch.name = ? " ;
+    var numbers = [];
     $cordovaSQLite.execute(db,query,[branchName.name])
     .then(function(res){
-      deferred.resolve(res);
+      for(var x = 0; x < res.rows.length; x++) {
+          numbers.push({
+            number : res.rows.item(x).number,
+          });
+      }
+      deferred.resolve(numbers);
     }, function(error){
       deferred.reject(error);
     });
@@ -98,7 +104,7 @@ angular.module('services', [])
 
   this.getBrands = function(){
     var deferred = $q.defer(),
-    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000),
+    db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'}),
     query = "SELECT brand FROM car GROUP BY brand",
     brands = [];
     db.transaction(function (tx) {
@@ -125,11 +131,17 @@ angular.module('services', [])
 
   this.getCarModels = function(carBrand){
     var deferred = $q.defer();
-    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     var query = "SELECT model FROM car Where car.brand = ? GROUP BY model" ;
+    var models = [];
     $cordovaSQLite.execute(db,query,[carBrand.brand])
     .then(function(res){
-      deferred.resolve(res);
+      for(var x = 0; x < res.rows.length; x++) {
+          models.push({
+            model : res.rows.item(x).model,
+          });
+      }
+      deferred.resolve(models);
     }, function(error){
       deferred.reject(error);
     });
@@ -138,7 +150,7 @@ angular.module('services', [])
 
   this.getAllModels = function(){
     var deferred = $q.defer();
-    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     var query = "SELECT model FROM car GROUP BY model" ;
     $cordovaSQLite.execute(db,query)
     .then(function(res){
@@ -151,11 +163,17 @@ angular.module('services', [])
 
   this.getCarColors = function(carBrand, carModel){
     var deferred = $q.defer();
-    var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    var db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     var query = "SELECT color FROM car Where car.brand = ? AND car.model = ?" ;
+    var colors = [];
     $cordovaSQLite.execute(db,query,[carBrand.brand, carModel.model])
     .then(function(res){
-      deferred.resolve(res);
+      for(var x = 0; x < res.rows.length; x++) {
+          colors.push({
+            color : res.rows.item(x).color,
+          });
+      }
+      deferred.resolve(colors);
     }, function(error){
       deferred.reject(error);
     });
@@ -164,7 +182,7 @@ angular.module('services', [])
 
   this.assign = function(cars){
     var deferred = $q.defer(),
-    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000),
+    db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'}),
     createQuery = "CREATE TABLE IF NOT EXISTS assign (brandId integer, branch text, branchNumber integer, quantity integer,PRIMARY KEY(brandId, branch, branchNumber), FOREIGN KEY (branch,branchNumber) REFERENCES branch(name,number))"
     //$cordovaSQLite.execute(db,'DROP TABLE IF EXISTS assign');
     $cordovaSQLite.execute(db, createQuery);
@@ -189,7 +207,7 @@ angular.module('services', [])
 
   this.getCars = function(){
     var deferred = $q.defer(),
-    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     $cordovaSQLite.execute(db,'Select car.brand, car.model, car.color, car.rowid FROM car')
     .then(function(res){
       deferred.resolve(res);
@@ -201,7 +219,7 @@ angular.module('services', [])
 
   this.getCar = function(rowId){
     var deferred = $q.defer(),
-    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     $cordovaSQLite.execute(db,'Select * FROM car WHERE car.rowid = ?',[rowId])
     .then(function(res){
       deferred.resolve(res.rows[0]);
@@ -213,7 +231,7 @@ angular.module('services', [])
 
   this.updateCar = function(rowId, newCar) {
     var deferred = $q.defer(),
-    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     db.transaction(function(tx){
       var query = 'UPDATE car SET brand = ?, model = ?, doors = ?, color = ?, price = ? WHERE car.rowid = ?';
       tx.executeSql(query,[newCar.brand, newCar.model, newCar.doors, newCar.color, newCar.price, rowId]);
@@ -228,7 +246,7 @@ angular.module('services', [])
   this.deleteCar = function(rowId){
     var service = this;
     var deferred = $q.defer(),
-    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     db.transaction(function(tx){
       var query = 'Delete FROM car WHERE car.rowid = ?';
       tx.executeSql(query,[rowId]);
@@ -247,7 +265,7 @@ angular.module('services', [])
 
   this.consult = function(car){
     var deferred = $q.defer(),
-    db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
+    db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     $cordovaSQLite.execute(db,'Select car.rowid FROM car WHERE car.brand = ? AND car.model = ? AND car.color = ?', [car.carBrand.brand, car.carModel.model, car.color])
     .then(function(res){
       if(res.rows.length > 0){

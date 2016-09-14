@@ -3,10 +3,11 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
+var db = null;
+
 angular.module('starter', ['ionic','ngCordova','controllers','services'])
 
 .run(function($ionicPlatform,$cordovaSQLite) {
-  var db = null;
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -21,10 +22,14 @@ angular.module('starter', ['ionic','ngCordova','controllers','services'])
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
-    // db = $cordovaSQLite.openDB("my.db");
-    // db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
-    // // $cordovaSQLite.execute(db,'DROP TABLE IF EXISTS branch');
-    // $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS branch (name text, number integer, PRIMARY KEY (name, number))");
+
+
+    window.plugins.sqlDB.copy("test.db", "0",function() {
+           db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
+       }, function(error) {
+           console.error("There was an error copying the database: " + error);
+           db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
+       });
 
   });
 })
@@ -36,11 +41,11 @@ angular.module('starter', ['ionic','ngCordova','controllers','services'])
     url: '/menu',
     templateUrl: "views/menu.html",
     // controller: 'MenuCtrl',
-    resolve:{
-          creatDB: function(SQLiteService){
-            return SQLiteService.CreateDataBase();
-          }
-      }
+    // resolve:{
+    //       creatDB: function(SQLiteService){
+    //         return SQLiteService.CreateDataBase();
+    //       }
+    //   }
   })
 
   .state('create',{

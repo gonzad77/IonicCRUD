@@ -31,7 +31,7 @@ angular.module('controllers', [])
     $scope.reloadNumbers = function(){
       SQLiteService.getBranchNumber($scope.cars.branchName)
       .then(function(numbers){
-        $scope.branchNumbers = numbers.rows;
+        $scope.branchNumbers = numbers;
         $scope.cars.branchNumber = $scope.branchNumbers[0];
       }, function(error){
         console.log(error);
@@ -42,7 +42,7 @@ angular.module('controllers', [])
     $scope.reloadModels = function(){
       SQLiteService.getCarModels($scope.cars.carBrand)
       .then(function(models){
-        $scope.carModels = models.rows;
+        $scope.carModels = models;
         $scope.cars.carModel = $scope.carModels[0];
         $scope.reloadColors();
       }, function(error){
@@ -54,7 +54,7 @@ angular.module('controllers', [])
     $scope.reloadColors = function(){
       SQLiteService.getCarColors($scope.cars.carBrand, $scope.cars.carModel)
       .then(function(colors){
-        $scope.carColors = colors.rows;
+        $scope.carColors = colors;
         $scope.cars.carColor = $scope.carColors[0];
       }, function(error){
         console.log(error);
