@@ -72,7 +72,7 @@ angular.module('controllers', [])
 })
 
 .controller('UpdateCtrl', function($scope, $state, cars, SQLiteService){
-  $scope.carRows = cars.rows;
+  $scope.carRows = cars;
 
   $scope.edit = function(rowid){
     $state.go('edit', {rowId: rowid});
@@ -81,10 +81,6 @@ angular.module('controllers', [])
 
 .controller('EditCtrl', function($scope, $state, $stateParams, car, brands,SQLiteService){
   $scope.carBrands = brands;
-
-  var actualBrand = {
-    brand: car.brand
-  };
 
   $scope.newCar = {
     brand: car.brand,
@@ -107,12 +103,12 @@ angular.module('controllers', [])
 })
 
 .controller('DeleteCtrl', function($scope, $state, cars, SQLiteService){
-  $scope.carRows = cars.rows;
+  $scope.carRows = cars;
 
   $scope.delete = function(rowid){
     SQLiteService.deleteCar(rowid)
     .then(function(res){
-      $scope.carRows = res.rows;
+      $scope.carRows = res;
     },function(error){
       console.log(error);
     })
@@ -141,8 +137,8 @@ angular.module('controllers', [])
     if($scope.car.carBrand.brand === "All Brands"){
       SQLiteService.getAllModels()
       .then(function(models){
-        for (var i=0 ; i < models.rows.length ; i++){
-          allModels.push(models.rows[i]);
+        for (var i=0 ; i < models.length ; i++){
+          allModels.push(models[i]);
         }
         allModels.unshift({
           model: "All Models"
@@ -154,8 +150,8 @@ angular.module('controllers', [])
     else{
       SQLiteService.getCarModels($scope.car.carBrand)
       .then(function(models){
-        for (var i=0 ; i < models.rows.length ; i++){
-          allModels.push(models.rows[i]);
+        for (var i=0 ; i < models.length ; i++){
+          allModels.push(models[i]);
         }
         allModels.unshift({
           model: "All Models"
@@ -172,7 +168,7 @@ angular.module('controllers', [])
   $scope.consult = function(car){
     SQLiteService.consult(car)
     .then(function(res){
-      $scope.branches = res.rows;
+      $scope.branches = res;
       $scope.error = false;
       $scope.showTable = true;
       console.log(res);

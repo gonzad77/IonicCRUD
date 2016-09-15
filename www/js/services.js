@@ -2,36 +2,6 @@ angular.module('services', [])
 
 .service('SQLiteService', function($cordovaSQLite, $q){
 
-  // this.CreateDataBase = function(){
-  //   var deferred = $q.defer();
-  //   var db = window.openDatabase("my.db", "1.0", "Cordova Demo", 200000);
-  //   $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS branch (name text, number integer, PRIMARY KEY (name, number))");
-  //   db.transaction(function(tx) {
-  //     var query = "INSERT INTO branch VALUES (?,?)";
-  //     tx.executeSql(query, ['AutoCar', 1]);
-  //     tx.executeSql(query, ['AutoCar', 2]);
-  //     tx.executeSql(query, ['AutoCar', 3]);
-  //     tx.executeSql(query, ['SuperCars', 1]);
-  //     tx.executeSql(query, ['SuperCars', 2]);
-  //     tx.executeSql(query, ['SuperCars', 3]);
-  //     tx.executeSql(query, ['SuperCars', 4]);
-  //     tx.executeSql(query, ['Soled', 1]);
-  //     tx.executeSql(query, ['Soled', 2]);
-  //     tx.executeSql(query, ['YouCar', 1]);
-  //     tx.executeSql(query, ['YouCar', 2]);
-  //     tx.executeSql(query, ['YouCar', 3]);
-  //     tx.executeSql(query, ['Movility', 1]);
-  //     tx.executeSql(query, ['Movility', 2]);
-  //   }, function(error) {
-  //       console.log('Transaction ERROR: ' + error.message);
-  //       deferred.resolve(error.message);
-  //   }, function() {
-  //       console.log('Populated database OK');
-  //       deferred.resolve("OK");
-  //   });
-  //   return deferred.promise;
-  // }
-
   this.addCar = function(car){
     var deferred = $q.defer();
     var db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
@@ -152,9 +122,15 @@ angular.module('services', [])
     var deferred = $q.defer();
     var db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     var query = "SELECT model FROM car GROUP BY model" ;
+    var models= [];
     $cordovaSQLite.execute(db,query)
     .then(function(res){
-      deferred.resolve(res);
+      for(var x = 0; x < res.rows.length; x++) {
+          models.push({
+            model : res.rows.item(x).model,
+          });
+      }
+      deferred.resolve(models);
     }, function(error){
       deferred.reject(error);
     });
@@ -191,7 +167,11 @@ angular.module('services', [])
     .then(function(res){
       db.transaction(function(tx) {
         var insertQuery = "INSERT INTO assign VALUES (?,?,?,?)";
-        tx.executeSql(insertQuery,[res.rows[0].rowid, cars.branchName.name, cars.branchNumber.number, cars.quantity]);
+        var rowid = '';
+        for(var x = 0; x < res.rows.length; x++) {
+            rowid = res.rows.item(x).rowid;
+        };
+        tx.executeSql(insertQuery,[rowid, cars.branchName.name, cars.branchNumber.number, cars.quantity]);
       }, function(error) {
         console.log('Transaction ERROR: ' + error.message);
         deferred.reject(error.message);
@@ -208,9 +188,18 @@ angular.module('services', [])
   this.getCars = function(){
     var deferred = $q.defer(),
     db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
+    var cars = [];
     $cordovaSQLite.execute(db,'Select car.brand, car.model, car.color, car.rowid FROM car')
     .then(function(res){
-      deferred.resolve(res);
+      for(var x = 0; x < res.rows.length; x++) {
+          cars.push({
+            brand: res.rows.item(x).brand,
+            model: res.rows.item(x).model,
+            color: res.rows.item(x).color,
+            rowid: res.rows.item(x).rowid
+          });
+      }
+      deferred.resolve(cars);
     },function(error){
       deferred.reject(error);
     })
@@ -222,7 +211,16 @@ angular.module('services', [])
     db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
     $cordovaSQLite.execute(db,'Select * FROM car WHERE car.rowid = ?',[rowId])
     .then(function(res){
-      deferred.resolve(res.rows[0]);
+      for(var x = 0; x < res.rows.length; x++) {
+          var car = {
+            brand: res.rows.item(x).brand,
+            color: res.rows.item(x).color,
+            model: res.rows.item(x).model,
+            doors: res.rows.item(x).doors,
+            price: res.rows.item(x).price
+          };
+      }
+      deferred.resolve(car);
     }, function(error){
       deferred.reject(error);
     })
@@ -266,11 +264,19 @@ angular.module('services', [])
   this.consult = function(car){
     var deferred = $q.defer(),
     db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
+    var branches = [];
     $cordovaSQLite.execute(db,'Select car.rowid FROM car WHERE car.brand = ? AND car.model = ? AND car.color = ?', [car.carBrand.brand, car.carModel.model, car.color])
     .then(function(res){
       if(res.rows.length > 0){
-        $cordovaSQLite.execute(db,'Select assign.branch, assign.branchNumber, assign.quantity FROM assign WHERE assign.brandId = ?' , [res.rows[0].rowid])
-        .then(function(branches){
+        $cordovaSQLite.execute(db,'Select assign.branch, assign.branchNumber, assign.quantity FROM assign WHERE assign.brandId = ?' , [res.rows.item(0).rowid])
+        .then(function(res){
+          for(var x = 0; x < res.rows.length; x++) {
+              branches.push({
+                branch: res.rows.item(x).branch,
+                branchNumber: res.rows.item(x).branchNumber,
+                quantity: res.rows.item(x).quantity,
+              });
+          }
           deferred.resolve(branches);
         }, function(error){
           deferred.reject(error);
