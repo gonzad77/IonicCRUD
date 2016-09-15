@@ -1,6 +1,6 @@
 angular.module('controllers', [])
 
-.controller('CreateCtrl', function($scope, $state, SQLiteService){
+.controller('CreateCtrl', function($scope, $state, $ionicPopup, SQLiteService){
   $scope.car = {
     brand: "BMW",
     model: "",
@@ -12,14 +12,25 @@ angular.module('controllers', [])
   $scope.create = function(car){
     SQLiteService.addCar(car)
     .then(function(ok){
-      console.log(ok);
+      var alertPopup = $ionicPopup.alert({
+        title: 'Car added',
+      });
+      alertPopup.then(function(res) {
+        $state.go('menu');
+      });
     },function(error){
-      console.log(error);
+      var alertPopup = $ionicPopup.alert({
+        title: 'Error',
+        template: 'The car already exists'
+      });
+      alertPopup.then(function(res) {
+        console.log(res);
+      });
     });
   }
 })
 
-.controller('AssignCtrl', function($scope, $state, branchs, brands,SQLiteService){
+.controller('AssignCtrl', function($scope, $state, branchs, brands, $ionicPopup, SQLiteService){
     $scope.branchItems = branchs;
     $scope.carBrands = brands;
     $scope.cars = {
@@ -64,9 +75,20 @@ angular.module('controllers', [])
     $scope.doAssign = function(cars){
       SQLiteService.assign(cars)
       .then(function(res){
-        console.log(res);
+        var alertPopup = $ionicPopup.alert({
+          title: 'Assignment complete',
+        });
+        alertPopup.then(function(res) {
+          $state.go('menu');
+        });
       },function(error){
-        console.log(error);
+        var alertPopup = $ionicPopup.alert({
+          title: 'Assignment error',
+          template: 'The car has already been assigned to this branch '
+        });
+        alertPopup.then(function(res) {
+          console.log(res);
+        });
       })
     }
 })
@@ -79,7 +101,7 @@ angular.module('controllers', [])
   }
 })
 
-.controller('EditCtrl', function($scope, $state, $stateParams, car, brands,SQLiteService){
+.controller('EditCtrl', function($scope, $state, $stateParams, car, brands, $ionicPopup, SQLiteService){
   $scope.carBrands = brands;
 
   $scope.newCar = {
@@ -93,10 +115,21 @@ angular.module('controllers', [])
   $scope.update = function(newCar){
     SQLiteService.updateCar($stateParams.rowId, newCar)
     .then(function(res){
-      console.log(res);
+      var alertPopup = $ionicPopup.alert({
+        title: 'Car updated',
+      });
+      alertPopup.then(function(res) {
+        $state.go('menu');
+      });
       $scope.error = false;
     },function(error){
-      console.log(error);
+      var alertPopup = $ionicPopup.alert({
+        title: 'Error',
+        template: 'The car already exists'
+      });
+      alertPopup.then(function(res) {
+        console.log(error);
+      });
       $scope.error = true;
     })
   }

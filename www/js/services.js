@@ -5,20 +5,19 @@ angular.module('services', [])
   this.addCar = function(car){
     var deferred = $q.defer();
     var db = $cordovaSQLite.openDB({name: 'test.db', location: 'default'});
-    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS car (brand text, model text, doors integer, color text, price integer, used integer, PRIMARY KEY (brand, model, color))");
     db.transaction(function(tx) {
       var query = "INSERT INTO car VALUES (?,?,?,?,?,?)";
       for(var i= 0; i < car.colors.length; i++){
         if(car.used){
-          tx.executeSql(query,[car.brand, car.model, car.doors ,car.colors[i], car.price, 1]);
+          tx.executeSql(query,[car.brand, car.model, car.colors[i], car.doors, car.price, 1]);
         }
         else{
-          tx.executeSql(query,[car.brand, car.model, car.doors ,car.colors[i], car.price, 0]);
+          tx.executeSql(query,[car.brand, car.model, car.colors[i], car.doors, car.price, 0]);
         }
       }
     }, function(error) {
         console.log('Transaction ERROR: ' + error.message);
-        deferred.resolve(error.message);
+        deferred.reject(error.message);
     }, function() {
         console.log('Populated database OK');
         deferred.resolve("OK");

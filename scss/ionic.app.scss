@@ -22,21 +22,21 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
 .header .col {
-    background-color:lightgrey;
+    background-color:lightblue;
 }
 
 .col {
-    border: solid 1px grey;
+    border: solid 1px blue;
     border-bottom-style: none;
     border-right-style: none;
 }
 
 .col:last-child {
-    border-right: solid 1px grey;
+    border-right: solid 1px blue;
 }
 
 .row:last-child .col {
-    border-bottom: solid 1px grey;
+    border-bottom: solid 1px blue;
 }
 
 .form_group
