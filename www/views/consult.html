@@ -30,7 +30,7 @@
               <spam class="placeholder-values">Colors</spam>
             </div>
             <select ng-model="car.color" required>
-              <option value="all">All Colors</option>
+              <option value="All Colors">All Colors</option>
               <option value="Black">Black</option>
               <option value="Blue">Blue</option>
               <option value="Green">Green</option>
@@ -48,14 +48,19 @@
         <p ng-show="error" class="help-block">Error</p>
 
         <div class="row header form_group" ng-show="showTable">
-              <div class="col col-33">branch</div>
-              <div class="col col-33">branch number</div>
-              <div class="col col-33">quantity</div>
+              <div class="col col-20">car brand</div>
+              <div class="col col-20">car model</div>
+              <div class="col col-20">branch</div>
+              <div class="col col-20">branch number</div>
+              <div class="col col-20">quantity</div>
+
             </div>
-            <div class="row" ng-repeat="b in branches">
-              <div class="col col-33">{{b.branch}}</div>
-              <div class="col col-33">{{b.branchNumber}}</div>
-              <div class="col col-33">{{b.quantity}}</div>
+            <div class="row" ng-repeat="b in branches" ng-show="showTable">
+              <div class="col col-20">{{b.brand}}</div>
+              <div class="col col-20">{{b.model}}</div>
+              <div class="col col-20">{{b.branch}}</div>
+              <div class="col col-20">{{b.branchNumber}}</div>
+              <div class="col col-20">{{b.quantity}}</div>
             </div>
 
       </div>

@@ -154,7 +154,7 @@ angular.module('controllers', [])
   $scope.car = {
     carBrand: "",
     carModel: "",
-    color: "all"
+    color: "All Colors"
   }
   for (var i=0 ; i < brands.length ; i++){
     allBrands.push(brands[i]);
